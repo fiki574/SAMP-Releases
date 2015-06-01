@@ -5,10 +5,10 @@ wherever on the map by fiki574
 
 */
 
-#if defined _CreateModShop_included
+#if defined _cms_included
 	#endinput
 #endif
-#define _CreateModShop_included
+#define _cms_included
 
 #define MOD_SHOP_LOCO	(0)
 #define MOD_SHOP_TF		(1)
