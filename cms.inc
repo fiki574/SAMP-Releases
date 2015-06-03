@@ -1,5 +1,7 @@
 /*
 
+UNFINISHED!!
+
 Crappy, unfinished attemp at creating custom mod shops
 wherever on the map by fiki574
 
