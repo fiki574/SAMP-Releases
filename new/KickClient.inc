@@ -16,7 +16,7 @@ Updated kick feature by fiki574
 #define NOTIFY_ALL					(2)
 #define NOTIFY_PLAYER				(3)
 #define NOTIFY_RCON					(4)
-#define DC_REASON_KICK				(98)
+#define DC_REASON_KICK				(99)
 
 new KickTimer[MAX_PLAYERS];
 
@@ -106,6 +106,8 @@ stock KickClient(...)
 
 					case NOTIFY_ALL:
      				{
+						//add code here for actual online players informing about kick
+						printf("[KickClient(%d)] %s", playerid, info);
 					}
 
 					case NOTIFY_RCON:

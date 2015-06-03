@@ -18,8 +18,10 @@ Updated ban feature by fiki574
 #define NOTIFY_RCON					(4)
 #define BAN_TYPE_NORMAL				(5)
 #define BAN_TYPE_IP					(6)
+#define BAN_TYPE_RANGE				(7)
+#define DC_REASON_BAN_RANGE			(96)
 #define DC_REASON_BAN				(97)
-#define DC_REASON_BAN_IP			(99)
+#define DC_REASON_BAN_IP			(98)
 
 new BanTimer[MAX_PLAYERS];
 
@@ -66,13 +68,32 @@ stock BanClient(...)
 				{ 
     				if(IsPlayerConnected(x))
 					{
-						CallLocalFunction("OnPlayerDisconnect", "dd", x, DC_REASON_BAN_IP);
 						new ip[32];
 						GetPlayerIp(x, ip, sizeof(ip));
 						new banit[40];
 						format(banit, sizeof(banit), "banip %s", ip);
+						CallLocalFunction("OnPlayerDisconnect", "dd", x, DC_REASON_BAN_IP);
 						SendRconCommand(banit);
 						BanTimer[x] = SetTimerEx("BanPlayer", 100, false, "d", x);
+					}
+				}
+			}
+
+			case BAN_TYPE_RANGE:
+			{
+				new hpid = GetPlayerPoolSize();
+				for(new x = 0; x <= hpid; x++)
+				{ 
+    				if(IsPlayerConnected(x))
+					{
+						new ip[50];
+						GetPlayerIp(x, ip, sizeof(ip));
+						strdel(ip, strlen(ip)-4, strlen(ip));
+						format(ip, sizeof(ip), "%s**.**", ip);
+						format(ip, sizeof(ip), "banip %s", ip);
+						CallRemoteFunction("OnPlayerDisconnectEx", "dd", x, DC_REASON_BAN_RANGE);
+            			SendRconCommand(ip);
+            			BanTimer[x] = SetTimerEx("BanPlayer", 100, false, "d", x);
 					}
 				}
 			}
@@ -99,6 +120,18 @@ stock BanClient(...)
 				CallLocalFunction("OnPlayerDisconnect", "dd", playerid, DC_REASON_BAN_IP);
 				SendRconCommand(banit);
 				BanTimer[playerid] = SetTimerEx("BanPlayer", 100, false, "d", playerid);
+			}
+
+			case BAN_TYPE_RANGE:
+			{
+				new ip[50];
+				GetPlayerIp(playerid, ip, sizeof(ip));
+				strdel(ip, strlen(ip)-4, strlen(ip));
+				format(ip, sizeof(ip), "%s**.**", ip);
+				format(ip, sizeof(ip), "banip %s", ip);
+				CallRemoteFunction("OnPlayerDisconnectEx", "dd", playerid, DC_REASON_BAN_RANGE);
+            	SendRconCommand(ip);
+            	BanTimer[playerid] = SetTimerEx("BanPlayer", 100, false, "d", playerid);
 			}
 		}
 		return 0;
@@ -158,6 +191,8 @@ stock BanClient(...)
 
 					case NOTIFY_ALL:
      				{
+						//add code here for actual online players informing about ban
+						printf("[BanClient(%d)] %s", playerid, info);
 					}
 
 					case NOTIFY_RCON:
