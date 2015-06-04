@@ -1,36 +1,44 @@
 /*
 
-Old, custom money system by fiki574
-
-NOTE:
-Extremely crappy, outdated and laggy. Use on your own!
+Custom money system by fiki574
 
 */
 
-#if defined _money_included
+#if defined _CustomMoney_included
 	#endinput
 #endif
-#define _money_included
-#include <Dini>
+#define _CustomMoney_included
+
+#include <a_samp>
+#include <bud>
 
 new Text:MoneyTD[MAX_PLAYERS];
 new Text:MoneyTD2[MAX_PLAYERS];
 new Text:MoneyTD3[MAX_PLAYERS];
 new PCash[MAX_PLAYERS];
-new file[100];
+
+#define MONEY_DB_NAME "money.db"
 
 /*Natives:
-native GiveMoney(playerid,ammount);
-native TakeMoney(playerid,ammount);
-native SetMoney(playerid,ammount);
+native GiveMoney(playerid, ammount);
+native TakeMoney(playerid, ammount);
+native SetMoney(playerid, ammount);
 native ResetMoney(playerid);
 native GetMoney(playerid);
 */
 
-forward M_OnGameModeInit();
-public OnGameModeInit()
+forward M_OnFilterScriptInit();
+public OnFilterScriptInit()
 {
-	for(new playerid=0; playerid < MAX_PLAYERS; playerid++)
+	BUD::Setting(opt.Database, MONEY_DB_NAME);
+	BUD::Setting(opt.Asynchronous, true);
+	BUD::Setting(opt.KeepAliveTime, 3000);
+	BUD::Setting(opt.CheckForUpdates, true);
+	BUD::Initialize();
+	BUD::VerifyColumn("name", BUD::TYPE_STRING);
+	BUD::VerifyColumn("money", BUD::TYPE_NUMBER);
+
+	for(new playerid = 0; playerid < MAX_PLAYERS; playerid++)
     {
         MoneyTD[playerid] = TextDrawCreate(498.000000, 88.000000,"_");
 		TextDrawBackgroundColor(MoneyTD[playerid], 255);
@@ -67,32 +75,30 @@ public OnGameModeInit()
 		TextDrawUseBox(MoneyTD3[playerid], 1);
 		TextDrawBoxColor(MoneyTD3[playerid], 255);
 		TextDrawTextSize(MoneyTD3[playerid], 625.000000, 480.000000);
-		
-		if(funcidx("M_OnGameModeInit") != -1) CallLocalFunction("M_OnGameModeInit", "");
 	}
 	return 1;
 }
-#if defined _ALS_OnGameModeInit
-        #undef OnGameModeInit
+#if defined _ALS_OnFilterScriptInit
+        #undef OnFilterScriptInit
 #else
-        #define _ALS_OnGameModeInit
+        #define _ALS_OnFilterScriptInit
 #endif
-#define OnGameModeInit M_OnGameModeInit
+#define OnFilterScriptInit M_OnFilterScriptInit
 
 forward M_OnPlayerConnect(playerid);
 public OnPlayerConnect(playerid)
 {
-	TextDrawShowForPlayer(playerid,MoneyTD2[playerid]);
-	TextDrawShowForPlayer(playerid,MoneyTD[playerid]);
-	TextDrawShowForPlayer(playerid,MoneyTD3[playerid]);	
-	new playername[MAX_PLAYER_NAME];
-	GetPlayerName(playerid,playername,sizeof(playername));
-	format(file,sizeof(file),"/fAdmin/Players/%s.txt",playername);
-	if(dini_Exists(file))
+	PCash[playerid] = 0;
+	TextDrawShowForPlayer(playerid, MoneyTD2[playerid]);
+	TextDrawShowForPlayer(playerid, MoneyTD[playerid]);
+	TextDrawShowForPlayer(playerid, MoneyTD3[playerid]);	
+	new name[MAX_PLAYER_NAME];
+	GetPlayerName(playerid, name, sizeof(name));
+	if(BUD::IsNameRegistered(name)) PCash[playerid] = BUD::GetIntEntry(BUD::GetNameUID(name), "money");
+	else
 	{
-		PCash[playerid] = dini_Int(file,"Money");
+		if(BUD::RegisterName(name, name)) BUD::SetIntEntry(BUD::GetNameUID(name), "i", PCash[playerid]);
 	}
-	if(funcidx("M_OnPlayerConnect") != -1) CallLocalFunction("M_OnPlayerConnect", "i", playerid);
 	return 1;
 }
 #if defined _ALS_OnPlayerConnect
@@ -102,20 +108,28 @@ public OnPlayerConnect(playerid)
 #endif
 #define OnPlayerConnect M_OnPlayerConnect
 
+forward M_OnPlayerDisconnect(playerid, reason);
+public OnPlayerDisconnect(playerid, reason)
+{
+	new name[MAX_PLAYER_NAME];
+	GetPlayerName(playerid, name, sizeof(name));
+	if(BUD::IsNameRegistered(name)) BUD::SetIntEntry(BUD::GetNameUID(name), "money", PCash[playerid]);
+	PCash[playerid] = 0;
+	return 1;
+}
+#if defined _ALS_OnPlayerDisconnect
+        #undef OnPlayerDisconnect
+#else
+        #define _ALS_OnPlayerDisconnect
+#endif
+#define OnPlayerDisconnect M_OnPlayerDisconnect
+
 forward M_OnPlayerUpdate(playerid);
 public OnPlayerUpdate(playerid)
 {
 	new cashstr[100];
 	format(cashstr,sizeof(cashstr),"~g~$~w~%d", PCash[playerid]);
-	TextDrawSetString(MoneyTD3[playerid],cashstr);
-	new playername[MAX_PLAYER_NAME];
-	GetPlayerName(playerid,playername,sizeof(playername));
-	format(file,sizeof(file),"/Players/%s.txt",playername);
-	if(dini_Exists(file))
-	{
-		dini_IntSet(file, "Money", PCash[playerid]);
-	}
-	if(funcidx("M_OnPlayerUpdate") != -1) CallLocalFunction("OnPlayerUpdate", "i", playerid);
+	TextDrawSetString(MoneyTD3[playerid], cashstr);
 	return 1;
 }
 #if defined _ALS_OnPlayerUpdate

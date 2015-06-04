@@ -5,7 +5,7 @@ Small logger include by fiki574
 */
 
 #include <a_samp>
-#define LOG_LOCATION    	"my.log"   
+#define LOG_LOCATION    	"Logger.log"   
 #define S_S_CAPACITY    	256         
 #define DAMN_THAT_MEMORY    2015        
 #define Log::           	Log_        
