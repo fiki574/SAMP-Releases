@@ -13,11 +13,11 @@ Updated ban feature by fiki574
 
 #define NOTIFY_TYPE_MSG				(0)
 #define NOTIFY_TYPE_DIALOG			(1)
-#define NOTIFY_ALL					(2)
+#define NOTIFY_ALL				(2)
 #define NOTIFY_PLAYER				(3)
-#define NOTIFY_RCON					(4)
+#define NOTIFY_RCON				(4)
 #define BAN_TYPE_NORMAL				(5)
-#define BAN_TYPE_IP					(6)
+#define BAN_TYPE_IP				(6)
 #define BAN_TYPE_RANGE				(7)
 #define DC_REASON_BAN_RANGE			(96)
 #define DC_REASON_BAN				(97)
@@ -31,7 +31,7 @@ native BanClient(...);
 
 stock BanClient(...)
 {
-    new action = -1, playerid = INVALID_PLAYER_ID, notification = -1, notify_who = -1;
+    	new action = -1, playerid = INVALID_PLAYER_ID, notification = -1, notify_who = -1;
 	if(numargs() == 0) 
 	{
 		printf("BanClient(): Must have at least one argument");
@@ -42,23 +42,23 @@ stock BanClient(...)
 		printf("BanClient(): Too many arguments");
 		return 0;
 	}
-    else if(numargs() == 1)
-    {
+    	else if(numargs() == 1)
+    	{
 		action = getarg(0);
 		switch(action)
 		{
 			case BAN_TYPE_NORMAL:
 			{
-    			new hpid = GetPlayerPoolSize();
+    				new hpid = GetPlayerPoolSize();
 				for(new x = 0; x <= hpid; x++)
 				{ 
-    				if(IsPlayerConnected(x))
+    					if(IsPlayerConnected(x))
 					{
 						CallLocalFunction("OnPlayerDisconnect", "dd", x, DC_REASON_BAN);
-    					BanTimer[x] = SetTimerEx("BanPlayer", 100, false, "d", x);
+    						BanTimer[x] = SetTimerEx("BanPlayer", 100, false, "d", x);
 						return 0;
 					}
-    			}
+    				}
 			}
 
 			case BAN_TYPE_IP:
@@ -66,7 +66,7 @@ stock BanClient(...)
 				new hpid = GetPlayerPoolSize();
 				for(new x = 0; x <= hpid; x++)
 				{ 
-    				if(IsPlayerConnected(x))
+    					if(IsPlayerConnected(x))
 					{
 						new ip[32];
 						GetPlayerIp(x, ip, sizeof(ip));
@@ -84,7 +84,7 @@ stock BanClient(...)
 				new hpid = GetPlayerPoolSize();
 				for(new x = 0; x <= hpid; x++)
 				{ 
-    				if(IsPlayerConnected(x))
+    					if(IsPlayerConnected(x))
 					{
 						new ip[50];
 						GetPlayerIp(x, ip, sizeof(ip));
@@ -92,15 +92,15 @@ stock BanClient(...)
 						format(ip, sizeof(ip), "%s**.**", ip);
 						format(ip, sizeof(ip), "banip %s", ip);
 						CallRemoteFunction("OnPlayerDisconnectEx", "dd", x, DC_REASON_BAN_RANGE);
-            			SendRconCommand(ip);
-            			BanTimer[x] = SetTimerEx("BanPlayer", 100, false, "d", x);
+            					SendRconCommand(ip);
+            					BanTimer[x] = SetTimerEx("BanPlayer", 100, false, "d", x);
 					}
 				}
 			}
 		}
-    }
-    else if(numargs() == 2)
-    {
+    	}
+    	else if(numargs() == 2)
+    	{
 		action = getarg(0);
 		playerid = getarg(1);
 		switch(action)
@@ -108,7 +108,7 @@ stock BanClient(...)
 			case BAN_TYPE_NORMAL:
 			{
 				CallLocalFunction("OnPlayerDisconnect", "dd", playerid, DC_REASON_BAN);
-    			BanTimer[playerid] = SetTimerEx("BanPlayer", 100, false, "d", playerid);
+    				BanTimer[playerid] = SetTimerEx("BanPlayer", 100, false, "d", playerid);
 			}
 
 			case BAN_TYPE_IP:
@@ -130,17 +130,17 @@ stock BanClient(...)
 				format(ip, sizeof(ip), "%s**.**", ip);
 				format(ip, sizeof(ip), "banip %s", ip);
 				CallRemoteFunction("OnPlayerDisconnectEx", "dd", playerid, DC_REASON_BAN_RANGE);
-            	SendRconCommand(ip);
-            	BanTimer[playerid] = SetTimerEx("BanPlayer", 100, false, "d", playerid);
+            			SendRconCommand(ip);
+            			BanTimer[playerid] = SetTimerEx("BanPlayer", 100, false, "d", playerid);
 			}
 		}
 		return 0;
-    }
-    else if(numargs() >= 3)
-    {
+    	}
+   	else if(numargs() >= 3)
+    	{
 		action = getarg(0);
-    	playerid = getarg(1);
-        notification = getarg(2);
+    		playerid = getarg(1);
+        	notification = getarg(2);
 		switch(notification)
 		{
 			case NOTIFY_TYPE_MSG:
@@ -167,7 +167,6 @@ stock BanClient(...)
 
 					case NOTIFY_RCON:
 					{
-						if(IsPlayerAdmin(playerid) == 1) SendClientMessage(playerid, msgcolor, msg);
 						printf("[BanClient(%d)] %s", playerid, msg);
 					}
 				}
@@ -190,7 +189,7 @@ stock BanClient(...)
 					}
 
 					case NOTIFY_ALL:
-     				{
+     					{
 						//add code here for actual online players informing about ban
 						printf("[BanClient(%d)] %s", playerid, info);
 					}
@@ -208,7 +207,7 @@ stock BanClient(...)
 			case BAN_TYPE_NORMAL:
 			{
 				CallLocalFunction("OnPlayerDisconnect", "dd", playerid, DC_REASON_BAN);
-    			BanTimer[playerid] = SetTimerEx("BanPlayer", 100, false, "d", playerid);
+    				BanTimer[playerid] = SetTimerEx("BanPlayer", 100, false, "d", playerid);
 			}
 
 			case BAN_TYPE_IP:
@@ -220,6 +219,18 @@ stock BanClient(...)
 				CallLocalFunction("OnPlayerDisconnect", "dd", playerid, DC_REASON_BAN_IP);
 				SendRconCommand(banit);
 				BanTimer[playerid] = SetTimerEx("BanPlayer", 100, false, "d", playerid);
+			}
+
+			case BAN_TYPE_RANGE:
+			{
+				new ip[50];
+				GetPlayerIp(playerid, ip, sizeof(ip));
+				strdel(ip, strlen(ip)-4, strlen(ip));
+				format(ip, sizeof(ip), "%s**.**", ip);
+				format(ip, sizeof(ip), "banip %s", ip);
+				CallRemoteFunction("OnPlayerDisconnectEx", "dd", playerid, DC_REASON_BAN_RANGE);
+            			SendRconCommand(ip);
+            			BanTimer[playerid] = SetTimerEx("BanPlayer", 100, false, "d", playerid);
 			}
 		}
 		return 0;

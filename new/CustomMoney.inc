@@ -39,8 +39,8 @@ public OnFilterScriptInit()
 	BUD::VerifyColumn("money", BUD::TYPE_NUMBER);
 
 	for(new playerid = 0; playerid < MAX_PLAYERS; playerid++)
-    {
-        MoneyTD[playerid] = TextDrawCreate(498.000000, 88.000000,"_");
+    	{
+       		MoneyTD[playerid] = TextDrawCreate(498.000000, 88.000000,"_");
 		TextDrawBackgroundColor(MoneyTD[playerid], 255);
 		TextDrawFont(MoneyTD[playerid], 1);
 		TextDrawLetterSize(MoneyTD[playerid], 0.500000, 1.000000);
@@ -51,7 +51,6 @@ public OnFilterScriptInit()
 		TextDrawUseBox(MoneyTD[playerid], 1);
 		TextDrawBoxColor(MoneyTD[playerid], 255);
 		TextDrawTextSize(MoneyTD[playerid], 625.000000, 480.000000);
-		
 		MoneyTD2[playerid] = TextDrawCreate(498.000000, 78.000000,"_");
 		TextDrawBackgroundColor(MoneyTD2[playerid], 255);
 		TextDrawFont(MoneyTD2[playerid], 1);
@@ -63,7 +62,6 @@ public OnFilterScriptInit()
 		TextDrawUseBox(MoneyTD2[playerid], 1);
 		TextDrawBoxColor(MoneyTD2[playerid], 255);
 		TextDrawTextSize(MoneyTD2[playerid], 625.000000, 480.000000);
-		
 		MoneyTD3[playerid] = TextDrawCreate(498.000000, 83.000000,"_");
 		TextDrawBackgroundColor(MoneyTD3[playerid], 255);
 		TextDrawFont(MoneyTD3[playerid], 3);

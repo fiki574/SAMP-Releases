@@ -13,9 +13,9 @@ Updated kick feature by fiki574
 
 #define NOTIFY_TYPE_MSG				(0)
 #define NOTIFY_TYPE_DIALOG			(1)
-#define NOTIFY_ALL					(2)
+#define NOTIFY_ALL				(2)
 #define NOTIFY_PLAYER				(3)
-#define NOTIFY_RCON					(4)
+#define NOTIFY_RCON				(4)
 #define DC_REASON_KICK				(99)
 
 new KickTimer[MAX_PLAYERS];
@@ -26,36 +26,36 @@ native KickClient(...);
 
 stock KickClient(...)
 {
-    new playerid = INVALID_PLAYER_ID, notification = -1, notify_who = -1;
+    	new playerid = INVALID_PLAYER_ID, notification = -1, notify_who = -1;
 	if(numargs() > 6)
 	{
 		printf("KickClient(): Too many arguments");
 		return 0;
 	}
-    else if(numargs() == 0)
-    {
-    	new hpid = GetPlayerPoolSize();
+    	else if(numargs() == 0)
+    	{
+    		new hpid = GetPlayerPoolSize();
 		for(new x = 0; x <= hpid; x++)
 		{ 
-    		if(IsPlayerConnected(x))
+    			if(IsPlayerConnected(x))
 			{
 				CallLocalFunction("OnPlayerDisconnect", "dd", x, DC_REASON_KICK);
 				KickTimer[x] = SetTimerEx("KickPlayer", 100, false, "d", x);
 				return 0;
 			}
+    		}
     	}
-    }
-    else if(numargs() == 1)
-    {
-        playerid = getarg(0);
+    	else if(numargs() == 1)
+    	{
+        	playerid = getarg(0);
 		CallLocalFunction("OnPlayerDisconnect", "dd", playerid, DC_REASON_KICK);
 		KickTimer[playerid] = SetTimerEx("KickPlayer", 100, false, "d", playerid);
 		return 0;
-    }
-    else if(numargs() >= 2)
-    {
-    	playerid = getarg(0);
-        notification = getarg(1);
+    	}
+    	else if(numargs() >= 2)
+    	{
+    		playerid = getarg(0);
+        	notification = getarg(1);
 		switch(notification)
 		{
 			case NOTIFY_TYPE_MSG:
@@ -82,7 +82,6 @@ stock KickClient(...)
 
 					case NOTIFY_RCON:
 					{
-						if(IsPlayerAdmin(playerid) == 1) SendClientMessage(playerid, msgcolor, msg);
 						printf("[KickClient(%d)] %s", playerid, msg);
 					}
 				}
@@ -105,7 +104,7 @@ stock KickClient(...)
 					}
 
 					case NOTIFY_ALL:
-     				{
+     					{
 						//add code here for actual online players informing about kick
 						printf("[KickClient(%d)] %s", playerid, info);
 					}

@@ -122,7 +122,7 @@ stock TimeBan(name[], reason[], hours, minutes, seconds)
 	if(BUD::RegisterName(name, name))
 	{
 		BUD::MultiSet(BUD::GetNameUID(name), "ssiiiiiis", "name", name, "reason", reason, "expiryyear", newyear, "expirymonth", newmonth, "expiryday", newday, "expiryhour", newhour, "expirymin", newmin, "expirysec", newsec, "ip", pip);
-	    CallLocalFunction("OnPlayerTimeBanned", "dsiii", playerid, reason, hours, minutes, seconds);
+	    	CallLocalFunction("OnPlayerTimeBanned", "dsiii", playerid, reason, hours, minutes, seconds);
 		CallLocalFunction("OnPlayerDisconnect", "di", playerid, DC_REASON_TIMEBAN);
 		DelayedKickTimer[playerid] =  SetTimerEx("DelayedKick", 100, false, "d", playerid);
 	}
@@ -143,7 +143,7 @@ stock GetPlayerTimeBanInfo(name[], &year, &month, &day, &hour, &min, &sec)
 	new getreason[256], getip[16];
 	if(IsPlayerTimeBanned(name) == 1)
 	{
-	    BUD::MultiGet(BUD::GetNameUID(name), "iiiiii", "expiryyear", getyear, "expirymonth", getmonth, "expiryday", getday, "expiryhour", gethour, "expirymin", getmin, "expirysec", getsec);
+	    	BUD::MultiGet(BUD::GetNameUID(name), "iiiiii", "expiryyear", getyear, "expirymonth", getmonth, "expiryday", getday, "expiryhour", gethour, "expirymin", getmin, "expirysec", getsec);
 		year = getyear;
 		month = getmonth;
 		day = getday;
@@ -159,9 +159,9 @@ stock UnbanPlayer(name[])
 {
 	if(IsPlayerTimeBanned(name) == 1)
 	{
-	    BUD::UnregisterName(name);
+	    	BUD::UnregisterName(name);
 		CallLocalFunction("OnPlayerUnban", "s", name);
-	    return 1;
+	    	return 1;
 	}
 	else return 0;
 }
@@ -172,13 +172,13 @@ stock GetPlayerId(name[])
 	new hpid = GetPlayerPoolSize();
 	for(new x = 0; x <= hpid; x++)
 	{ 
-    	if(IsPlayerConnected(x))
+    		if(IsPlayerConnected(x))
 		{
 			new pname[MAX_PLAYER_NAME];
 			GetPlayerName(x, pname, sizeof(pname));
 			if(strcmp(pname, name, true, strlen(name)) == 0) playerid = x;
 			else playerid = INVALID_PLAYER_ID;
-    	}
+    		}
 	}
 	return playerid;
 }

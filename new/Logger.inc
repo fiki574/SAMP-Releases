@@ -7,36 +7,36 @@ Small logger include by fiki574
 #include <a_samp>
 #define LOG_LOCATION    	"Logger.log"   
 #define S_S_CAPACITY    	256         
-#define DAMN_THAT_MEMORY    2015        
+#define DAMN_THAT_MEMORY    	2015        
 #define Log::           	Log_        
 
 stock Log::Write(log[])
 {
-    if(fexist(LOG_LOCATION))
-    {
-        new File:logf = fopen(LOG_LOCATION, io_append);
-        fwrite(logf, log);
-        fclose(logf);
-    }
-    else
-    {
+   	if(fexist(LOG_LOCATION))
+    	{
+        	new File:logf = fopen(LOG_LOCATION, io_append);
+        	fwrite(logf, log);
+        	fclose(logf);
+    	}
+    	else
+    	{
 		new File:logf = fopen(LOG_LOCATION, io_write);
 		fwrite(logf, log);
-        fclose(logf);
-    }
-    return 1;
+        	fclose(logf);
+    	}
+    	return 1;
 }
 
 stock Log::Read()
 {
-    new string[S_S_CAPACITY], bigstring[DAMN_THAT_MEMORY];
-    if(fexist(LOG_LOCATION))
-    {
+    	new string[S_S_CAPACITY], bigstring[DAMN_THAT_MEMORY];
+    	if(fexist(LOG_LOCATION))
+    	{
 		new File:f = fopen(LOG_LOCATION, io_read);
 		while(fread(f, string)) strcat(bigstring, string);
 		fclose(f);
-    }
-    return bigstring;
+    	}
+	return bigstring;
 }
 
 stock Log::print(string[])
