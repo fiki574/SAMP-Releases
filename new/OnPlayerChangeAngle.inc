@@ -41,6 +41,7 @@ public CheckAngle(playerid, Float:old_angle)
 	GetPlayerFacingAngle(playerid, new_angle);
 	CallLocalFunction("OnPlayerChangeAngle", "dff", playerid, old_angle, new_angle);
 	timer_used2[playerid] = 0;
+	KillTimer(CheckTimer2[playerid]);
 	return 1;
 }
 

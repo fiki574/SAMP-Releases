@@ -119,6 +119,7 @@ stock TimeBan(name[], reason[], hours, minutes, seconds)
 	new playerid = GetPlayerId(name);
 	new pip[32];
 	GetPlayerIp(playerid, pip, sizeof(pip));
+	if(!IsPlayerConnected(playerid) || playerid == INVALID_PLAYER_ID) pip = "0.0.0.0";
 	if(BUD::RegisterName(name, name))
 	{
 		BUD::MultiSet(BUD::GetNameUID(name), "ssiiiiiis", "name", name, "reason", reason, "expiryyear", newyear, "expirymonth", newmonth, "expiryday", newday, "expiryhour", newhour, "expirymin", newmin, "expirysec", newsec, "ip", pip);

@@ -41,6 +41,7 @@ public CheckPos(playerid, Float:old_x, Float:old_y, Float:old_z)
 	GetPlayerPos(playerid, new_x, new_y, new_z);
 	CallLocalFunction("OnPlayerChangePosition", "dffffff", playerid, old_x, old_y, old_z, new_x, new_y, new_z);
 	timer_used[playerid] = 0;
+	KillTimer(CheckTimer[playerid]);
 	return 1;
 }
 
