@@ -15,15 +15,23 @@ stock Log::Write(log[])
    	if(fexist(LOG_LOCATION))
     	{
         	new File:logf = fopen(LOG_LOCATION, io_append);
-        	fwrite(logf, log);
-        	fclose(logf);
+		if(logf)
+		{
+        		fwrite(logf, log);
+        		fclose(logf);
+		}
+		else return 0;
     	}
     	else
     	{
 		new File:logf = fopen(LOG_LOCATION, io_write);
-		fwrite(logf, log);
-        	fclose(logf);
-    	}
+		if(logf)
+		{
+			fwrite(logf, log);
+        		fclose(logf);
+		}		
+		else return 0;    	
+	}
     	return 1;
 }
 
@@ -33,8 +41,12 @@ stock Log::Read()
     	if(fexist(LOG_LOCATION))
     	{
 		new File:f = fopen(LOG_LOCATION, io_read);
-		while(fread(f, string)) strcat(bigstring, string);
-		fclose(f);
+		if(f)
+		{
+			while(fread(f, string)) strcat(bigstring, string);
+			fclose(f);
+		}
+		else return 0;
     	}
 	return bigstring;
 }
